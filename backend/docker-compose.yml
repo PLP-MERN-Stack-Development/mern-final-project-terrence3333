@@ -1,1 +1,26 @@
 
+version: '3.9'
+services:
+  mongo:
+    image: mongo:7.0
+    container_name: mongo_teamflow
+    ports:
+      - '27017:27017'
+    volumes:
+      - mongo_data:/data/db
+
+  backend:
+    build: .
+    container_name: backend_teamflow
+    ports:
+      - '5000:5000'
+    environment:
+      - MONGO_URI=mongodb://mongo:27017/teamflow
+      - JWT_SECRET=your_jwt_secret_key
+      - NODE_ENV=development
+    depends_on:
+      - mongo
+    command: npm run dev
+
+volumes:
+  mongo_data:
